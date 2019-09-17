@@ -14,6 +14,7 @@ import { Comment } from '../shared/comment';
 })
 export class DishdetailComponent implements OnInit {
   commentsForm: FormGroup;
+  errMess: string;  
   comments: Comment;
   dish: Dish;
   date = new Date().toISOString();
@@ -33,7 +34,7 @@ validationMessages = {
       'maxlength': 'Author name cannot be more than 25 characters long'
       },
       'comment': {
-        'required': 'Comment is required',
+        'required': 'Comment is required.',
         'minlength': 'Comment must be at least 4 characters long',
         'maxlength': 'Comment must be at least 100 characters long'
       },
@@ -48,7 +49,8 @@ validationMessages = {
     //const id = this.route.snapshot.params['id']; params here is observable(this is the old way of routing through params)
     this.dishService.getDishIds().subscribe((dishIds) => this.dishIds = dishIds);
     this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-    .subscribe((dish) => {this.dish = dish; this.setPrevNext(dish.id); });
+    .subscribe((dish) => {this.dish = dish; this.setPrevNext(dish.id); },
+    errmess => this.errMess = <any>errmess );
   }
 
   
