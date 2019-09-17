@@ -21,6 +21,7 @@ export class DishdetailComponent implements OnInit {
   dishIds: string[];
   prev: string;
   next: string;
+  dishcopy: Dish; 
   @ViewChild('cform') commentFormDirective;
   formErrors = {
     'author': '',
@@ -49,7 +50,7 @@ validationMessages = {
     //const id = this.route.snapshot.params['id']; params here is observable(this is the old way of routing through params)
     this.dishService.getDishIds().subscribe((dishIds) => this.dishIds = dishIds);
     this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-    .subscribe((dish) => {this.dish = dish; this.setPrevNext(dish.id); },
+    .subscribe((dish) => {this.dish = dish; this.dishcopy = dish; this.setPrevNext(dish.id); },
     errmess => this.errMess = <any>errmess );
   }
 
@@ -90,6 +91,14 @@ onValueChanged(data?: any){
         this.comments = this.commentsForm.value;
         this.dish.comments.push(this.comments);
         console.log(this.comments);
+        this.dishcopy.comments.push(this.comments);
+        this.dishService.putDish(this.dishcopy)
+        .subscribe(dish => {
+            this.dish = dish; this.dishcopy = dish;
+        },
+        errmess => {this.dish = null; this.dishcopy = null; this.dishcopy = null, this.errMess = <any>errmess; }
+        )
+        this.commentFormDirective.resetForm();
         this.commentsForm.reset({
               author: '',
               rating: 5,
@@ -97,13 +106,7 @@ onValueChanged(data?: any){
               date: null
               
           });
-          this.commentFormDirective.resetForm({
-              author: '',
-              rating: 5,
-              comment: '',
-              date: 5
-
-          });
+          
       }
 
   setPrevNext(dishId: string){
