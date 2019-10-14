@@ -15,7 +15,7 @@ export class DishService {
   constructor(private http: HttpClient, private processHTTPMsgService: ProcessHTTPMsgService) { }
 
     getDishes(): Observable<Dish[]>{
-    return this.http.get<Dish[]>(baseURL + 'dishes' )
+    return this.http.get<Dish[]>(baseURL + 'dishes')
     .pipe(catchError(this.processHTTPMsgService.handleError));
     }
   

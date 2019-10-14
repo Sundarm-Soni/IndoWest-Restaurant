@@ -106,7 +106,6 @@ onValueChanged(data?: any){
       onSubmit() {
         this.comments = this.commentsForm.value;
         //this.dish.comments.push(this.comments);
-        console.log(this.comments);
         this.dishcopy.comments.push(this.comments);
         this.dishService.putDish(this.dishcopy)
         .subscribe(dish => {
